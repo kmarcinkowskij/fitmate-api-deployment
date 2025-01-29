@@ -19,16 +19,16 @@ app.use('/users/', users_router);
 app.use('/dev/', devs_router);
 app.use('/sports/', sports_router);
 
-app.listen(async () => {
-    try {
-        console.log("database connecting");
-        await mongoose.connect(process.env.MONGODB_CONNECT_URI, clientOptions);
-        await mongoose.connection.db.admin().command({ ping: 1});
-        console.log("database connected");
-    } catch (e) {
-        console.error(e);
-    }
+try {
+    console.log("database connecting");
+    await mongoose.connect(process.env.MONGODB_CONNECT_URI, clientOptions);
+    await mongoose.connection.db.admin().command({ ping: 1});
+    console.log("database connected");
+} catch (e) {
+    console.error(e);
+}
 
+app.listen(async () => {
     console.log(`api listening on ${PORT}`);
 })
 
