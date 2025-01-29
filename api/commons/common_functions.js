@@ -12,11 +12,10 @@ export const get_date = () => {
 
 export const check_key = async (v_api_key) => {
     try {
-        console.log(v_api_key);
         let query = Developer_account.findOne({api_key: new mongoose.Types.ObjectId(v_api_key)});
         const dev = await query.exec();
         if(dev == null) {
-            console.log("wrong api key!");
+            console.log("wrong api key!" + v_api_key);
             return false;
         }
         let calls = dev.call_count.valueOf();
