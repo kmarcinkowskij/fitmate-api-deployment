@@ -22,7 +22,7 @@ app.use('/sports/', sports_router);
 app.listen(async () => {
     try {
         console.log("database connecting");
-        await mongoose.connect(uri, clientOptions);
+        await mongoose.connect();
         await mongoose.connection.db.admin().command({ ping: 1});
         console.log("database connected");
     } catch (e) {
