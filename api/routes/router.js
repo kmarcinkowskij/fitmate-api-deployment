@@ -6,12 +6,14 @@ const fitmate_router = express.Router();
 fitmate_router.get('/', async (req, res) => {
     console.log("attempted call!");
     if(!req.query.api_key) {
+        console.log("access denied!");
         res.status(403).json({
             title: "Access denied",
             message: "API key not provided!"
         })
         return;
     }
+    console.log("api key checked!");
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
@@ -20,12 +22,16 @@ fitmate_router.get('/', async (req, res) => {
         return;
     }
     try {
+        console.log("connected!");
         res.status(200).json({"message": "Connection successful!" });
+        return;
     } catch (err) {
+        console.log("an error has occured!");
         res.status(500).json({
             title: "internal error",
             message: err.message
         })
+        return;
     }
 })
 
