@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import User_account, {planSchema} from "../schemas/user_account.js";
+import User_account from "../schemas/user_account.js";
 import express from "express";
 import {
     check_email_availability,
@@ -8,6 +8,9 @@ import {
     check_user_password,
     get_date
 } from "../commons/common_functions.js";
+import {get, Types} from "mongoose";
+import plan from "../schemas/plan.js";
+import Plan from "../schemas/plan.js";
 
 const users_router = express.Router();
 
@@ -168,47 +171,77 @@ users_router.get('/find_user/', async(req, res) => {
     });
 })
 
-// users_router.get('/add_plan_user_id', async (req, res) => {
-//     if(!req.query.api_key) {
-//         res.status(403).json({
-//             title: "Access denied",
-//             message: "API key not provided!"
-//         })
-//         return;
-//     }
-//     if(!await check_key(req.query.api_key)) {
-//         res.status(403).json({
-//             title: "Access denied",
-//             message: "API key invalid!"
-//         })
-//         return;
-//     }
-//     if(req.query.id == null) {
-//         res.status(400).json({
-//             title: "Bad Request",
-//             message: "missing login or password!"
-//         })
-//     }
-//
-//     if( req.body.name == null ||
-//         req.body.sports == null ||
-//         req.body.duration_in_minutes == null ||
-//         req.body.priority == null ||
-//         req.body.location == null)
-//     {
-//         res.status(400).json({
-//             title: "Bad Request",
-//             message: "missing parameters!"
-//         })
-//         return;
-//     }
-//
-//     let new_plan = new planSchema({
-//
-//     })
-//
-//     const query = new User_account.findOneAndUpdate({id: req.query.id} )
-//
-// })
+users_router.post('/add_plan_user_id', async (req, res) => {
+    if(!req.query.api_key) {
+        res.status(403).json({
+            title: "Access denied",
+            message: "API key not provided!"
+        })
+        return;
+    }
+    if(!await check_key(req.query.api_key)) {
+        res.status(403).json({
+            title: "Access denied",
+            message: "API key invalid!"
+        })
+        return;
+    }
+    if(req.query.id == null) {
+        res.status(400).json({
+            title: "Bad Request",
+            message: "missing id!"
+        })
+    }
+    if( req.body.name == null ||
+        req.body.sports == null ||
+        req.body.duration_in_minutes == null ||
+        req.body.priority == null ||
+        req.body.location == null)
+    {
+        res.status(400).json({
+            title: "Bad Request",
+            message: "missing parameters!"
+        })
+        return;
+    }
+
+    let sports_ids_before = Array.from(req.body.sports);
+    let sports_ids_after = sports_ids_before.map((element) => {
+        return new Types.ObjectId(element);
+    })
+
+    console.log(sports_ids_after);
+
+    let new_plan = new plan({
+        name: req.body.name,
+        date_created: get_date(),
+        duration_in_minutes: req.body.duration_in_minutes,
+        priority: req.body.priority,
+        location: req.body.location
+    })
+
+    console.log(new_plan);
+
+    const query = User_account.findOneAndUpdate({id: req.query.id}, { $push: {training_plans: {
+                name: req.body.name,
+                date_created: get_date(),
+                duration_in_minutes: req.body.duration_in_minutes,
+                sports: JSON.parse(JSON.stringify(sports_ids_after)),
+                priority: req.body.priority,
+                location: req.body.location
+            }}});
+    let result = await query.exec();
+    const saved_plan = new_plan.save();
+    if(result === null || saved_plan === null) {
+        res.status(505).json({
+            title: "internal error!",
+            message: "an error has occured!"
+        })
+        return;
+    }
+    res.status(202).json({
+        title: "update successful!"
+    })
+})
 
 export default users_router;
