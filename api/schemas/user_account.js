@@ -12,79 +12,8 @@ const userSchema = new mongoose.Schema({
     date_created: {type: Date, required: true},
     last_active: {type: Date},
     favourite_sports: {type: [String]},
-    schedules: [{
-        schedule: {
-            days: {
-                monday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                },
-                tuesday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                },
-                wednesday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                },
-                thursday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                },
-                friday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                },
-                saturday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                },
-                sunday: {
-                    empty: {type: Boolean, default: true},
-                    data:
-                        [{
-                            beginning_time_hour: {type: Number},
-                            beginning_time_minutes: {type: Number},
-                            plan_id: {type: mongoose.Schema.Types.ObjectId},
-                        }],
-                }
-            }
-        },
-    }],
-    training_plans: [{
-        plan: {type: mongoose.Schema.Types.ObjectId}
-    }],
-
+    schedules: [{type: mongoose.Types.ObjectId}],
+    training_plans: [{type: mongoose.Types.ObjectId}]
 })
 
 const model = mongoose.model('users', userSchema)
