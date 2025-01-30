@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import User_account from "../schemas/user_account.js";
 import express from "express";
 import {
+    assert_sport_exists,
     check_email_availability,
     check_key,
     check_login_availability,
@@ -193,7 +194,7 @@ users_router.post('/add_plan_user_id', async (req, res) => {
         })
     }
     if( req.body.name == null ||
-        req.body.sports == null ||
+        req.body.sport == null ||
         req.body.duration_in_minutes == null ||
         req.body.priority == null ||
         req.body.location == null)
@@ -205,16 +206,24 @@ users_router.post('/add_plan_user_id', async (req, res) => {
         return;
     }
 
-    let sports_ids_before = Array.from(req.body.sports);
-    let sports_ids_after = sports_ids_before.map((element) => {
-        return new Types.ObjectId(element);
-    })
 
-    console.log(sports_ids_after);
+
+    let sport_id = new Types.ObjectId(req.body.sport);
+    let plan_id = new Types.ObjectId();
+
+    if(!await assert_sport_exists(sport_id)) {
+        res.status(400).json({
+            title: "Bad Request",
+            message: "This sport does not exist!"
+        })
+        return;
+    }
+    console.log("sport found!");
 
     let new_plan = new plan({
         name: req.body.name,
         date_created: get_date(),
+        sport: sport_id,
         duration_in_minutes: req.body.duration_in_minutes,
         priority: req.body.priority,
         location: req.body.location
@@ -223,12 +232,7 @@ users_router.post('/add_plan_user_id', async (req, res) => {
     console.log(new_plan);
 
     const query = User_account.findOneAndUpdate({id: req.query.id}, { $push: {training_plans: {
-                name: req.body.name,
-                date_created: get_date(),
-                duration_in_minutes: req.body.duration_in_minutes,
-                sports: JSON.parse(JSON.stringify(sports_ids_after)),
-                priority: req.body.priority,
-                location: req.body.location
+                plan_id
             }}});
     let result = await query.exec();
     const saved_plan = new_plan.save();

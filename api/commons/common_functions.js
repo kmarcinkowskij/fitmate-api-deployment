@@ -2,6 +2,7 @@ import Developer_account from "../schemas/developer_account.js";
 import mongoose from "mongoose";
 import User_account from "../schemas/user_account.js";
 import bcrypt from "bcrypt";
+import sports from "../schemas/sports.js";
 
 export const get_date = () => {
     let yourDate = new Date()
@@ -80,6 +81,28 @@ export const username_to_id = async (v_username) => {
             return false;
         }
         return result.id;
+    }catch(err){
+        return false;
+    }
+}
+
+export const assert_sport_exists = async (v_sport_id) => {
+    try{
+        let query = sports.findOne({id: new mongoose.Types.ObjectId(v_sport_id)});
+        const result = await query.exec();
+        return result !== null;
+
+    }catch(err){
+        return false;
+    }
+}
+
+export const assert_user_exists = async (v_sport_id) => {
+    try{
+        let query = sports.findOne({id: new mongoose.Types.ObjectId(v_sport_id)});
+        const result = await query.exec();
+        return result !== null;
+
     }catch(err){
         return false;
     }

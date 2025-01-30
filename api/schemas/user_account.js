@@ -82,7 +82,7 @@ const userSchema = new mongoose.Schema({
         },
     }],
     training_plans: [{
-        plan: {type: planSchema}
+        plan: {type: mongoose.Schema.Types.ObjectId}
     }],
 
 })
