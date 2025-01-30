@@ -9,9 +9,8 @@ import {
     check_user_password,
     get_date
 } from "../commons/common_functions.js";
-import {get, Types} from "mongoose";
+import {Types} from "mongoose";
 import plan from "../schemas/plan.js";
-import Plan from "../schemas/plan.js";
 
 const users_router = express.Router();
 
@@ -60,7 +59,7 @@ users_router.post('/add_user', async (req, res) => {
         return;
     }
     let password = req.body.password;
-    consconst salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(password, salt);
 
     let new_user = new User_account( {
