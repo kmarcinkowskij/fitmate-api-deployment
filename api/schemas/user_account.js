@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {planSchema} from "./plan.js";
+
 const userSchema = new mongoose.Schema({
     id: {type: mongoose.Schema.Types.ObjectId, index: true, auto: true},
     email: {type: String, required: true},
