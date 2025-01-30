@@ -8,9 +8,6 @@ import sports_router from "./routes/sports.js";
 
 const app = express();
 const PORT = process.env.PORT;
-const db_login = process.env.DB_LOGIN;
-const db_password = process.env.DB_PASSWORD;
-const uri = `mongodb+srv://${db_login}:${db_password}@fitmate.unr7t.mongodb.net/app?retryWrites=true&w=majority&appName=FitMate`
 const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true} };
 
 app.use(bodyParser.json());
