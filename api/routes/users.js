@@ -23,7 +23,6 @@ users_router.post('/add_user', async (req, res) => {
         req.body.height == null ||
         req.body.weight == null)
     {
-        console.log(req.body);
         res.status(400).json({
             title: "Bad Request",
             message: "missing parameters!"
@@ -61,7 +60,7 @@ users_router.post('/add_user', async (req, res) => {
         return;
     }
     let password = req.body.password;
-    const salt = await bcrypt.genSalt(10);
+    consconst salt = await bcrypt.genSalt(10);
     const hashed_password = await bcrypt.hash(password, salt);
 
     let new_user = new User_account( {
@@ -218,8 +217,6 @@ users_router.post('/add_plan_user_id', async (req, res) => {
         })
         return;
     }
-    console.log("sport found!");
-
     let new_plan = new plan({
         name: req.body.name,
         date_created: get_date(),
@@ -229,7 +226,6 @@ users_router.post('/add_plan_user_id', async (req, res) => {
         location: req.body.location
     })
 
-    console.log(new_plan);
 
     const query = User_account.findOneAndUpdate({id: req.query.id}, { $push: {training_plans: {
                 plan_id
