@@ -227,7 +227,7 @@ users_router.post('/add_plan_user_id', async (req, res) => {
 
 
     const query = User_account.findOneAndUpdate({id: req.query.id}, { $push: {training_plans: {
-                plan_id
+                _id: plan_id
             }}});
     let result = await query.exec();
     const saved_plan = new_plan.save();
