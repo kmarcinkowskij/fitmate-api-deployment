@@ -259,7 +259,9 @@ users_router.get('/get_plans', async (req, res) => {
 
     res.status(200).json({
         title: "user's plans found!",
-        message: plans_result,
+        message: {
+            "plans":plans_result
+        },
         status: 200
     });
 
