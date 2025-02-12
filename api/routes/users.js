@@ -191,7 +191,7 @@ users_router.get('/find_user/', async(req, res) => {
     res.status(200).json({
         title: "user found!",
         message: result.id,
-        status: 404
+        status: 200
     });
 })
 
