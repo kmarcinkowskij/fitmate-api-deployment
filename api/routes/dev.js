@@ -8,21 +8,24 @@ devs_router.post('/dev_add', async (req, res)=> {
     if(!req.query.api_key) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key not provided!"
+            message: "API key not provided!",
+            status: 403
         })
         return;
     }
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key invalid!"
+            message: "API key invalid!",
+            status: 403
         })
         return;
     }
     if(req.query.email == null || req.query.key_name == null) {
         res.status(400).json({
             title: "Bad Request",
-            message: "missing name or category!"
+            message: "missing name or category!",
+            status: 400
         })
         return;
     }
@@ -37,11 +40,13 @@ devs_router.post('/dev_add', async (req, res)=> {
         const saved_dev = await new_dev.save()
         res.status(201).json({
             message: `${saved_dev}\n\n\tSave your api key! ${saved_dev.api_key}`,
+            status: 201
         })
     }catch(err){
         res.status(500).json({
             title: "internal error",
-            message: err.message
+            message: err.message,
+            status: 500
         })
     }
 })

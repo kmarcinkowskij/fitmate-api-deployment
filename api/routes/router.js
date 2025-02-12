@@ -9,7 +9,8 @@ fitmate_router.get('/', async (req, res) => {
         console.log("access denied!");
         res.status(403).json({
             title: "Access denied",
-            message: "API key not provided!"
+            message: "API key not provided!",
+            status: 403
         })
         return;
     }
@@ -17,19 +18,21 @@ fitmate_router.get('/', async (req, res) => {
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key invalid!"
+            message: "API key invalid!",
+            status: 403
         })
         return;
     }
     try {
         console.log("connected!");
-        res.status(200).json({"message": "Connection successful!" });
+        res.status(200).json({"message": "Connection successful!", status: 200});
         return;
     } catch (err) {
         console.log("an error has occured!");
         res.status(500).json({
             title: "internal error",
-            message: err.message
+            message: err.message,
+            status: 500
         })
         return;
     }

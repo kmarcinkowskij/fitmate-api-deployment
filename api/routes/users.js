@@ -24,7 +24,8 @@ users_router.post('/add_user', async (req, res) => {
     {
         res.status(400).json({
             title: "Bad Request",
-            message: "missing parameters!"
+            message: "missing parameters!",
+            status: 400
         })
         return;
     }
@@ -33,28 +34,32 @@ users_router.post('/add_user', async (req, res) => {
     if(!req.query.api_key) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key not provided!"
+            message: "API key not provided!",
+            status: 403
         })
         return;
     }
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key invalid!"
+            message: "API key invalid!",
+            status: 403
         })
         return;
     }
     if(!await check_login_availability(req.body.login)) {
         res.status(409).json({
             title: "Access denied",
-            message: "login already taken!"
+            message: "login already taken!",
+            status: 409
         })
         return;
     }
     if(!await check_email_availability(req.body.email)) {
         res.status(409).json({
             title: "Access denied",
-            message: "email already taken!"
+            message: "email already taken!",
+            status: 409
         })
         return;
     }
@@ -76,12 +81,18 @@ users_router.post('/add_user', async (req, res) => {
 
     try {
         const saved_user = await new_user.save()
-        res.status(201).json(`saved user ${saved_user.login}`);
+        res.status(201).json({
+            message: `saved user ${saved_user.login}`,
+            status: 201
+        }
+    );
     } catch (err) {
 
         res.status(500).json({
             title: "internal error",
-            message: err.message
+            message: err.message,
+            status: 500
+
         })
     }
 })
@@ -90,46 +101,53 @@ users_router.get('/authenticate_user/', async (req, res) => {
     if(!req.query.api_key) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key not provided!"
+            message: "API key not provided!",
+            status: 403
         })
         return;
     }
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key invalid!"
+            message: "API key invalid!",
+            status: 403
         })
         return;
     }
     if(req.query.login == null || req.query.password == null) {
         res.status(400).json({
             title: "Bad Request",
-            message: "missing login or password!"
+            message: "missing login or password!",
+            status: 400
         })
     }
     try {
         if(await check_user_password(req.query.login, req.query.password) === 404) {
             res.status(404).json({
                 title: "Requested resource not found!",
-                message: "wrong login!"
+                message: "wrong login!",
+                status: 404
             })
             return;
         }
         if (!await check_user_password(req.query.login, req.query.password)) {
             res.status(403).json({
                 title: "Access Denied",
-                message: "wrong login or password!"
+                message: "wrong login or password!",
+                status: 403
             })
             return;
         }
         res.status(200).json({
             title: "Authentication complete",
-            message: `Hello, ${req.query.login}!`
+            message: `Hello, ${req.query.login}!`,
+            status: 200
         });
     } catch(err) {
         res.status(500).json({
             title: "internal error",
-            message: err.message
+            message: err.message,
+            status: 500
         })
     }
 })
@@ -138,21 +156,24 @@ users_router.get('/find_user/', async(req, res) => {
     if(!req.query.api_key) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key not provided!"
+            message: "API key not provided!",
+            status: 403
         })
         return;
     }
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key invalid!"
+            message: "API key invalid!",
+            status: 403
         })
         return;
     }
     if(req.query.user == null) {
         res.status(400).json({
             title: "Bad Request",
-            message: "missing login"
+            message: "missing login",
+            status: 400
         })
     }
     let query = User_account.findOne({login: req.query.user});
@@ -160,13 +181,15 @@ users_router.get('/find_user/', async(req, res) => {
     if(result === null) {
         res.status(404).json({
             title: "Requested resource not found!",
-            message: "A user with this login was not found. Are you sure the login is correct?"
+            message: "A user with this login was not found. Are you sure the login is correct?",
+            status: 404
         })
         return;
     }
     res.status(200).json({
         title: "user found!",
-        message: result.id
+        message: result.id,
+        status: 404
     });
 })
 
@@ -174,21 +197,24 @@ users_router.post('/add_plan_user_id', async (req, res) => {
     if(!req.query.api_key) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key not provided!"
+            message: "API key not provided!",
+            status: 403
         })
         return;
     }
     if(!await check_key(req.query.api_key)) {
         res.status(403).json({
             title: "Access denied",
-            message: "API key invalid!"
+            message: "API key invalid!",
+            status: 403
         })
         return;
     }
     if(req.query.id == null) {
         res.status(400).json({
             title: "Bad Request",
-            message: "missing id!"
+            message: "missing id!",
+            status: 400
         })
     }
     if( req.body.name == null ||
@@ -199,7 +225,8 @@ users_router.post('/add_plan_user_id', async (req, res) => {
     {
         res.status(400).json({
             title: "Bad Request",
-            message: "missing parameters!"
+            message: "missing parameters!",
+            status: 400
         })
         return;
     }
@@ -212,7 +239,8 @@ users_router.post('/add_plan_user_id', async (req, res) => {
     if(!await assert_sport_exists(sport_id)) {
         res.status(400).json({
             title: "Bad Request",
-            message: "This sport does not exist!"
+            message: "This sport does not exist!",
+            status: 400
         })
         return;
     }
@@ -234,12 +262,14 @@ users_router.post('/add_plan_user_id', async (req, res) => {
     if(result === null || saved_plan === null) {
         res.status(505).json({
             title: "internal error!",
-            message: "an error has occured!"
+            message: "an error has occured!",
+            status: 505
         })
         return;
     }
     res.status(202).json({
-        title: "update successful!"
+        title: "update successful!",
+        status: 202
     })
 })
 
