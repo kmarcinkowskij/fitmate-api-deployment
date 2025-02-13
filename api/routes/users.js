@@ -84,6 +84,7 @@ users_router.post('/add_user', async (req, res) => {
         const saved_user = await new_user.save()
         res.status(201).json({
             message: `saved user ${saved_user.login}`,
+            user_id: new_user.id,
             status: 201
         }
     );
